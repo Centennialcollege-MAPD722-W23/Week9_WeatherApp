@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:week9demo_weatherapp/LocationScreen.dart';
 import 'package:week9demo_weatherapp/SearchForCityScreen.dart';
 import 'package:week9demo_weatherapp/WeatherScreen.dart';
 
@@ -18,8 +19,9 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       routes: {
-        '/': (context) => SearchForCityScreen(),
+        '/': (context) => LocationScreen(),
         '/weather': (context) => WeatherScreen(),
+        '/search': (context) => SearchForCityScreen(),
       },
     );
   }

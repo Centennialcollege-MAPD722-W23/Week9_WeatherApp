@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:week9demo_weatherapp/Networking.dart';
+import 'package:week9demo_weatherapp/WeatherObject.dart';
 
 class CitiesSearchDelegate extends SearchDelegate {
   List<String> citiesList = [];
-  double temp = 0.0;
+  WeatherObject weatherObject = WeatherObject();
 
   Future getAllCities(String q) async {
     var list = await Networking.getCities(q);
     citiesList = List<String>.from(list).toList();
   }
 
-  Future getWeatherInCity(String c) async {
-    temp = await Networking.getWeather(c);
+  Future getWeatherInCity(String c, BuildContext context) async {
+    weatherObject = await Networking.getWeather(c);
+    Navigator.pushNamed(context, '/weather', arguments: weatherObject);
   }
 
   @override
@@ -41,7 +43,16 @@ class CitiesSearchDelegate extends SearchDelegate {
               itemBuilder: (context, index) {
                 return ListTile(
                   title: Text(citiesList.elementAt(index)),
-                  onTap: () {},
+                  onTap: () {
+                    final splitted = citiesList
+                        .elementAt(index)
+                        .split(' '); // ['Toronto', ' ON', ' United State']
+                    var fullCityName = "";
+                    for (int i = 0; i < splitted.length; i++) {
+                      fullCityName += splitted[i].trimLeft();
+                    }
+                    getWeatherInCity(fullCityName, context);
+                  },
                 );
               },
             );
@@ -70,9 +81,7 @@ class CitiesSearchDelegate extends SearchDelegate {
                     for (int i = 0; i < splitted.length; i++) {
                       fullCityName += splitted[i].trimLeft();
                     }
-                    //getWeatherInCity('toronto,on,canada');
-                    getWeatherInCity(fullCityName);
-                    Navigator.pushNamed(context, '/weather', arguments: temp);
+                    getWeatherInCity(fullCityName, context);
                   },
                 );
               },
